@@ -157,9 +157,7 @@ export class Rendertron {
     try {
       const pdf = await this.renderer.gerapdf(
         url, mobileVersion, dimensions, options);
-      ctx.set('Content-Type', 'application/pdf');
-      ctx.set('Content-Length', pdf.length.toString());
-      ctx.body = pdf;
+
     } catch (error) {
       const err = error as ScreenshotError;
       ctx.status = err.type === 'Forbidden' ? 403 : 500;
