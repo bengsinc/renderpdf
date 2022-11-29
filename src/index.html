@@ -176,6 +176,10 @@ the License.
   </div>
 
   <div id="options">
+    <button onclick="takePdf(this)">
+      <i class="material-icons">file-pdf-box</i>
+      <span>Gerar PDF</span>
+    </button>
     <button onclick="takeScreenshot(this)">
       <i class="material-icons">photo_camera</i>
       <span>Gerar uma captura</span>
@@ -188,6 +192,7 @@ the License.
       <i class="material-icons">mobile_friendly</i>
       <span>Renderizar como mobile</span>
     </button>
+
   </div>
 
   <script>
@@ -222,6 +227,23 @@ the License.
       element.classList.add('loading');
       document.querySelector('progress-bar').removeAttribute('hidden');
       window.location.href += `screenshot/${encodeUrl(url.value)}?width=${window.innerWidth}&height=${window.innerHeight}`;
+    }
+
+    function takePdf(element) {
+      if (!url.value) {
+        onEmptyUrl();
+        return;
+      }
+
+      var httpRegex = /(http(s?))\:\/\//gi;
+
+      if (!httpRegex.test(url.value)) {
+        url.value = 'https://' + url.value;
+      }
+
+      element.classList.add('loading');
+      document.querySelector('progress-bar').removeAttribute('hidden');
+      window.location.href += `pdf/${encodeUrl(url.value)}?width=${window.innerWidth}&height=${window.innerHeight}`;
     }
 
     function onEmptyUrl() {

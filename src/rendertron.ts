@@ -8,8 +8,8 @@ import * as path from 'path';
 import * as puppeteer from 'puppeteer';
 import * as url from 'url';
 
-import {Renderer, ScreenshotError} from './renderer';
-import {Config, ConfigManager} from './config';
+import { Renderer, ScreenshotError } from './renderer';
+import { Config, ConfigManager } from './config';
 
 /**
  * Rendertron rendering service. This runs the server which routes rendering
@@ -18,7 +18,7 @@ import {Config, ConfigManager} from './config';
 export class Rendertron {
   app: Koa = new Koa();
   private config: Config = ConfigManager.config;
-  private renderer: Renderer|undefined;
+  private renderer: Renderer | undefined;
   private port = process.env.PORT;
 
   async initialize() {
@@ -27,7 +27,7 @@ export class Rendertron {
 
     this.port = this.port || this.config.port;
 
-    const browser = await puppeteer.launch({args: ['--no-sandbox']});
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     this.renderer = new Renderer(browser, this.config);
 
     this.app.use(koaLogger());
@@ -55,6 +55,10 @@ export class Rendertron {
       '/screenshot/:url(.*)', this.handleScreenshotRequest.bind(this)));
     this.app.use(route.post(
       '/screenshot/:url(.*)', this.handleScreenshotRequest.bind(this)));
+    this.app.use(route.get(
+      '/pdf/:url(.*)', this.handlePdfRequest.bind(this)));
+    this.app.use(route.post(
+      '/pdf/:url(.*)', this.handlePdfRequest.bind(this)));
 
     return this.app.listen(this.port, () => {
       console.log(`Listening on port ${this.port}`);
@@ -128,6 +132,45 @@ export class Rendertron {
       ctx.status = err.type === 'Forbidden' ? 403 : 500;
     }
   }
+
+
+
+
+  async handlePdfRequest(ctx: Koa.Context, url: string) {
+    if (!this.renderer) {
+      throw (new Error('No renderer initalized yet.'));
+    }
+
+    if (this.restricted(url)) {
+      ctx.status = 403;
+      return;
+    }
+
+    let options = undefined;
+    if (ctx.method === 'POST' && ctx.request.body) {
+      options = ctx.request.body;
+    }
+
+    const dimensions = {
+      width: Number(ctx.query['width']) || this.config.width,
+      height: Number(ctx.query['height']) || this.config.height
+    };
+
+    const mobileVersion = 'mobile' in ctx.query ? true : false;
+
+    try {
+      const pdf = await this.renderer.pdf(
+        url, mobileVersion, dimensions, options);
+      ctx.set('Content-Type', 'image/jpeg');
+      ctx.set('Content-Length', img.length.toString());
+      ctx.body = img;
+    } catch (error) {
+      const err = error as ScreenshotError;
+      ctx.status = err.type === 'Forbidden' ? 403 : 500;
+    }
+  }
+
+
 }
 
 async function logUncaughtError(error: Error) {
