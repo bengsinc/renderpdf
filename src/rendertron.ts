@@ -55,10 +55,6 @@ export class Rendertron {
       '/screenshot/:url(.*)', this.handleScreenshotRequest.bind(this)));
     this.app.use(route.post(
       '/screenshot/:url(.*)', this.handleScreenshotRequest.bind(this)));
-    this.app.use(route.get(
-      '/pdf/:url(.*)', this.handlePdfRequest.bind(this)));
-    this.app.use(route.post(
-      '/pdf/:url(.*)', this.handlePdfRequest.bind(this)));
 
     return this.app.listen(this.port, () => {
       console.log(`Listening on port ${this.port}`);
@@ -132,7 +128,6 @@ export class Rendertron {
       ctx.status = err.type === 'Forbidden' ? 403 : 500;
     }
   }
-
 }
 
 async function logUncaughtError(error: Error) {
