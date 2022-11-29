@@ -161,7 +161,7 @@ export class Rendertron {
     try {
       const pdf = await this.renderer.pdf(
         url, mobileVersion, dimensions, options);
-      ctx.set('Content-Type', 'image/jpeg');
+      ctx.set('Content-Type', 'application/pdf');
       ctx.set('Content-Length', img.length.toString());
       ctx.body = img;
     } catch (error) {
