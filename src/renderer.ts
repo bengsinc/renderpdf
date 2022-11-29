@@ -227,10 +227,11 @@ export class Renderer {
     }
 
     // Must be jpeg & binary format.
-
+    const screenshotOptions =
+      Object.assign({}, options, { type: 'jpeg', encoding: 'binary' });
     // Screenshot returns a buffer based on specified encoding above.
     // https://github.com/GoogleChrome/puppeteer/blob/v1.8.0/docs/api.md#pagescreenshotoptions
-    const buffer = await page.pdf({ format: 'A4' }) as Buffer;
+    const buffer = await page.screenshot(screenshotOptions) as Buffer;
     return buffer;
   }
 }
