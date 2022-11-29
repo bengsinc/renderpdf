@@ -169,8 +169,7 @@ export class Rendertron {
     try {
       const page = await this.browser.newPage();
       await page.goto('https://google.com', { timeout: 2000, waitUntil: 'networkidle0' });
-      const pdf = await page.pdf({
-        path: 'result.pdf',
+      await page.pdf({
         margin: { top: '100px', right: '50px', bottom: '100px', left: '50px' },
         printBackground: true,
         format: 'A4',
