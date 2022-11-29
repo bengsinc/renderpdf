@@ -130,6 +130,7 @@ the License.
         filter: blur(0px);
         transform: none;
       }
+
       to {
         filter: blur(1px);
         transform: scale(1.05);
@@ -167,32 +168,26 @@ the License.
 </head>
 
 <body>
-  <h1>Rendertron</h1>
+  <h1>Midia Render</h1>
 
   <div id="search-bar">
-    <input id="url" type="url" placeholder="Enter a URL" autocapitalize="off" spellcheck="false">
+    <input id="url" type="url" placeholder="Cole a URL" autocapitalize="off" spellcheck="false">
     <progress-bar hidden></progress-bar>
   </div>
 
   <div id="options">
     <button onclick="takeScreenshot(this)">
       <i class="material-icons">photo_camera</i>
-      <span>Take screenshot</span>
+      <span>Gerar uma captura</span>
     </button>
     <button onclick="render(this, false)">
       <i class="material-icons">cloud_upload</i>
-      <span>Render &amp; serialize</span>
+      <span>Renderizar</span>
     </button>
     <button onclick="render(this, true)">
       <i class="material-icons">mobile_friendly</i>
-      <span>Render as mobile &amp; serialize</span>
+      <span>Renderizar como mobile</span>
     </button>
-    <a href="https://github.com/GoogleChrome/rendertron" target="_blank">
-      <button tabindex="-1">
-        <i class="material-icons">insert_drive_file</i>
-        <span>View documentation</span>
-      </button>
-    </a>
   </div>
 
   <script>
