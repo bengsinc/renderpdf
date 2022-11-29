@@ -16,22 +16,10 @@ import { Config, ConfigManager } from './config';
  * requests through to the renderer.
  */
 export class Rendertron {
-
-
-
-
   app: Koa = new Koa();
   private config: Config = ConfigManager.config;
   private renderer: Renderer | undefined;
   private port = process.env.PORT;
-
-  private browser: puppeteer.Browser;
-
-  constructor(browser: puppeteer.Browser, config: Config) {
-    this.browser = browser;
-    this.config = config;
-  }
-
 
   async initialize() {
     // Load config
@@ -167,18 +155,11 @@ export class Rendertron {
     const mobileVersion = 'mobile' in ctx.query ? true : false;
 
     try {
-      const page = await this.browser.newPage();
-      await page.goto('https://google.com', { timeout: 2000, waitUntil: 'networkidle0' });
-      await page.pdf({
-        margin: { top: '100px', right: '50px', bottom: '100px', left: '50px' },
-        printBackground: true,
-        format: 'A4',
-      });
-      //  const img = await this.renderer.gerapdf(
-      //   url, mobileVersion, dimensions, options);
-      // ctx.set('Content-Type', 'image/jpeg');
-      //  ctx.set('Content-Length', img.length.toString());
-      //  ctx.body = img;
+      const img = await this.renderer.screenshot(
+        url, mobileVersion, dimensions, options);
+      ctx.set('Content-Type', 'image/jpeg');
+      ctx.set('Content-Length', img.length.toString());
+      ctx.body = img;
     } catch (error) {
       const err = error as ScreenshotError;
       ctx.status = err.type === 'Forbidden' ? 403 : 500;
