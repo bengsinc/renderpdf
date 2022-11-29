@@ -20,7 +20,7 @@ the License.
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-  <title>Rendertron</title>
+  <title>Gerador de midia</title>
   <meta name="description" content="Rendertron - headless rendering service">
 
   <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
@@ -34,7 +34,7 @@ the License.
         m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
     })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-    ga('create', 'UA-104508854-1', 'auto');
+    ga('create', '', 'auto');
     ga('send', 'pageview');
   </script>
 
@@ -176,7 +176,10 @@ the License.
   </div>
 
   <div id="options">
-
+    <button onclick="takePdf(this)">
+      <i class="material-icons">photo_camera</i>
+      <span>Gerar PDF</span>
+    </button>
     <button onclick="takeScreenshot(this)">
       <i class="material-icons">photo_camera</i>
       <span>Gerar uma captura</span>
@@ -210,6 +213,23 @@ the License.
     }
 
     function takeScreenshot(element) {
+      if (!url.value) {
+        onEmptyUrl();
+        return;
+      }
+
+      var httpRegex = /(http(s?))\:\/\//gi;
+
+      if (!httpRegex.test(url.value)) {
+        url.value = 'https://' + url.value;
+      }
+
+      element.classList.add('loading');
+      document.querySelector('progress-bar').removeAttribute('hidden');
+      window.location.href += `screenshot/${encodeUrl(url.value)}?width=${window.innerWidth}&height=${window.innerHeight}`;
+    }
+
+    function takePdf(element) {
       if (!url.value) {
         onEmptyUrl();
         return;
