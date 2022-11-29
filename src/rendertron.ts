@@ -162,8 +162,8 @@ export class Rendertron {
       const pdf = await this.renderer.pdf(
         url, mobileVersion, dimensions, options);
       ctx.set('Content-Type', 'application/pdf');
-      ctx.set('Content-Length', img.length.toString());
-      ctx.body = img;
+      ctx.set('Content-Length', pdf.length.toString());
+      ctx.body = pdf;
     } catch (error) {
       const err = error as ScreenshotError;
       ctx.status = err.type === 'Forbidden' ? 403 : 500;
