@@ -190,6 +190,50 @@ export class Renderer {
     const buffer = await page.screenshot(screenshotOptions) as Buffer;
     return buffer;
   }
+  async pdf(
+    url: string,
+    isMobile: boolean,
+    dimensions: ViewportDimensions,
+    options?: object): Promise<Buffer> {
+    const page = await this.browser.newPage();
+
+    // Page may reload when setting isMobile
+    // https://github.com/GoogleChrome/puppeteer/blob/v1.10.0/docs/api.md#pagesetviewportviewport
+    await page.setViewport(
+      { width: dimensions.width, height: dimensions.height, isMobile });
+
+    if (isMobile) {
+      page.setUserAgent(MOBILE_USERAGENT);
+    }
+
+    let response: puppeteer.Response | null = null;
+
+    try {
+      // Navigate to page. Wait until there are no oustanding network requests.
+      response =
+        await page.goto(url, { timeout: 10000, waitUntil: 'networkidle0' });
+    } catch (e) {
+      console.error(e);
+    }
+
+    if (!response) {
+      throw new ScreenshotError('NoResponse');
+    }
+
+    // Disable access to compute metadata. See
+    // https://cloud.google.com/compute/docs/storing-retrieving-metadata.
+    if (response!.headers()['metadata-flavor'] === 'Google') {
+      throw new ScreenshotError('Forbidden');
+    }
+
+    // Must be jpeg & binary format.
+    const screenshotOptions =
+      Object.assign({}, options, { type: 'jpeg', encoding: 'binary' });
+    // Screenshot returns a buffer based on specified encoding above.
+    // https://github.com/GoogleChrome/puppeteer/blob/v1.8.0/docs/api.md#pagescreenshotoptions
+    const buffer = await page.screenshot(screenshotOptions) as Buffer;
+    return buffer;
+  }
 }
 
 type ErrorType = 'Forbidden' | 'NoResponse';
