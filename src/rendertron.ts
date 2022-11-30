@@ -155,12 +155,11 @@ export class Rendertron {
     const mobileVersion = 'mobile' in ctx.query ? true : false;
 
     try {
-      console.log('oi');
-      //const img = await this.renderer.screenshot(
-      // url, mobileVersion, dimensions, options);
-      //ctx.set('Content-Type', 'image/jpeg');
-      //ctx.set('Content-Length', img.length.toString());
-      //ctx.body = img;
+      const img = await this.renderer.screenshot(
+        url, mobileVersion, dimensions, options);
+      ctx.set('Content-Type', 'image/jpeg');
+      ctx.set('Content-Length', img.length.toString());
+      ctx.body = img;
     } catch (error) {
       const err = error as ScreenshotError;
       ctx.status = err.type === 'Forbidden' ? 403 : 500;
