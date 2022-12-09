@@ -132,7 +132,7 @@ export class Rendertron {
       ctx.status = err.type === 'Forbidden' ? 403 : 500;
     }
   }
-  async handlePdfRequest(ctx: Koa.Context, url: string) {
+  async handlePdfRequest() {
 
     console.log(url);
 
