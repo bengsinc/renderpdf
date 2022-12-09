@@ -132,12 +132,7 @@ export class Rendertron {
       ctx.status = err.type === 'Forbidden' ? 403 : 500;
     }
   }
-  async handlePdfRequest() {
 
-    return url;
-
-
-  }
 }
 
 async function logUncaughtError(error: Error) {
