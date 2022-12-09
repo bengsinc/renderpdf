@@ -57,7 +57,7 @@ export class Rendertron {
       '/screenshot/:url(.*)', this.handleScreenshotRequest.bind(this)));
 
     this.app.use(
-      route.get('/', (req, res) => { res.send('hello world') })
+      route.get('/pdf', (req, res) => { res.send('hello world') })
     );
 
     return this.app.listen(this.port, () => {
