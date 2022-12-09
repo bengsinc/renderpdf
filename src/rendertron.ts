@@ -50,15 +50,18 @@ export class Rendertron {
     }
 
     this.app.use(
-      route.get('/render/:url(.*)', this.handleRenderRequest.bind(this)));
-    this.app.use(route.get(
-      '/screenshot/:url(.*)', this.handleScreenshotRequest.bind(this)));
-    this.app.use(route.post(
-      '/screenshot/:url(.*)', this.handleScreenshotRequest.bind(this)));
-
-    this.app.use(
-      route.get('/pdf', (req, res) => { res.send('hello world') })
+      route.get('/render/:url(.*)', this.handleRenderRequest.bind(this))
     );
+    this.app.use(
+      route.get('/screenshot/:url(.*)', this.handleScreenshotRequest.bind(this))
+    );
+    this.app.use(
+      route.post('/screenshot/:url(.*)', this.handleScreenshotRequest.bind(this))
+    );
+
+
+    route.get('/pdf', (res) => { res.send('hello world') });
+
 
     return this.app.listen(this.port, () => {
       console.log(`Listening on port ${this.port}`);
