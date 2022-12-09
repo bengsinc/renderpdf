@@ -134,7 +134,7 @@ export class Rendertron {
   }
   async handlePdfRequest() {
 
-    console.log(url);
+    return url;
 
 
   }
